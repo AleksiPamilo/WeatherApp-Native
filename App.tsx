@@ -1,22 +1,22 @@
 import React, { useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
-import { fetchData as fetch } from './api/openWeatherMap';
+import { getWeather } from './api/openWeatherMap';
 import LandingPage from './pages/LandingPage';
 
 const App = () => {
   const [data, setData] = React.useState<any>(null);
 
-  useEffect(() => { fetch("Helsinki").then((data) => setData(data)) }, []);
+  useEffect(() => { getWeather("Texas").then((data) => setData(data)) }, []);
 
-  const fetchData = (country: string) => {
-    fetch(country).then(setData);
+  const fetchWeather = (country: string) => {
+    getWeather(country).then(setData);
   };
 
   return (
     <SafeAreaView style={Styles.Container}>
       {
         data
-          ? <LandingPage data={data} fetchData={fetchData} />
+          ? <LandingPage data={data} fetchWeather={fetchWeather} />
           : <Text style={Styles.Loading}>Loading...</Text>
       }
     </SafeAreaView>

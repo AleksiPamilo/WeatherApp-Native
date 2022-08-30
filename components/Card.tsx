@@ -2,15 +2,17 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 
 type CardProps = {
-    icon: string;
+    icon: string,
+    time: string,
+    temperature: number,
 }
 
-const Card: React.FC<CardProps> = ({ icon }) => {
+const Card: React.FC<CardProps> = ({ icon, time, temperature }) => {
     return (
         <View>
-            <Text style={{ textAlign: 'center', color: "#fff" }}>6am</Text>
+            <Text style={{ textAlign: 'center', color: "#fff" }}>{time}</Text>
             <Image source={{ uri: icon }} style={Styles.Icon} />
-            <Text style={{ color: "#fff", marginTop: -10, textAlign: 'center' }}>10°</Text>
+            <Text style={{ color: "#fff", marginTop: -10, textAlign: 'center' }}>{temperature}°</Text>
         </View>
     );
 };
@@ -25,6 +27,7 @@ const Styles = StyleSheet.create({
     Icon: {
         width: 50,
         height: 50,
+        alignContent: "center",
     },
 });
 

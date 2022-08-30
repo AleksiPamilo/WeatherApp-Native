@@ -4,22 +4,23 @@ import Card from '../components/Card';
 
 type LandingPageProps = {
   data: any;
-  fetchData: (country: string) => void;
+  fetchWeather: (country: string) => void;
 };
 
-const LandingPage: React.FC<LandingPageProps> = ({ data, fetchData }) => {
+const LandingPage: React.FC<LandingPageProps> = ({ data, fetchWeather }) => {
   const date = new Date();
 
-  console.log(data.name);
+  const currentWeather = data.currentWeather;
+  const forecastWeather = data.forecastWeather;
 
   return (
     <View>
       <Text style={Styles.Date}>{getWeekDay(date)}, {getOrdinalNum(date.getDate())}, {getMonthName(date)}</Text>
       <Text style={Styles.Time}>{date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }).toLowerCase().replace(" ", "")}</Text>
-      <Text style={Styles.City}>{data.name}</Text>
+      <Text style={Styles.City}>{currentWeather.name}</Text>
       <View>
-        <Image source={{ uri: `https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png` }} style={Styles.Icon} />
-        <Text style={Styles.Temp}>{Math.round(data.main.temp)}°C</Text>
+        <Image source={{ uri: `https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@4x.png` }} style={Styles.Icon} />
+        <Text style={Styles.Temp}>{Math.round(currentWeather.main.temp)}°C</Text>
       </View>
       <View>
         <Text style={Styles.WeekDay}>{getWeekDay(date)}</Text>
@@ -28,14 +29,26 @@ const LandingPage: React.FC<LandingPageProps> = ({ data, fetchData }) => {
         </View>
       </View>
       <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, marginHorizontal: 20 }}>
-        <Card icon={`https://openweathermap.org/img/w/${data.weather[0].icon}.png`} />
-        <Card icon={`https://openweathermap.org/img/w/${data.weather[0].icon}.png`} />
-        <Card icon={`https://openweathermap.org/img/w/${data.weather[0].icon}.png`} />
-        <Card icon={`https://openweathermap.org/img/w/${data.weather[0].icon}.png`} />
+        {forecastWeather.list.slice(0, 5).map((weather: any, index: number) => {
+          return (
+            <Card
+              key={index}
+              temperature={Math.round(weather.main.temp)}
+              time={getTime(weather.dt)}
+              icon={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+            />
+          )
+        }
+        )}
       </View>
     </View>
   );
 };
+
+const getTime = (time: number) => {
+  const date = new Date(time * 1000);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }).toLowerCase().replace(" ", "");
+}
 
 function getMonthName(date: Date) {
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
